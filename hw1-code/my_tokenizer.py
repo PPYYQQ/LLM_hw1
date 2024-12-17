@@ -15,14 +15,17 @@ def merge(ids, pair, idx):
     """
     newids = []
     i = 0
+    # print(ids)
     while i < len(ids):
-        if i < len(ids-1):
-            continue
-        if ids[i] == pair[0] and ids[i+1] == pair[1]:
+        # print(i)
+        if i < len(ids) - 1 and ids[i] == pair[0] and ids[i+1] == pair[1]:
             newids.append(idx)
             i += 2
         else:
             newids.append(ids[i])
+            i += 1
+        # print(i)
+        # print(newids)
     return newids
 
 class Tokenizer:
@@ -45,20 +48,20 @@ class Tokenizer:
         num_merges = vocab_size - 256
         ids = list(tokens)
         merges = {}
-        vocab = {idx: bytes[idx] for idx in range(256)}
+        vocab = {idx: bytes([idx]) for idx in range(256)}
         for i in range(num_merges):
-            stats = self.get_stats(ids)
-            pair = max(stats, key=stats.get)
+            stats = get_stats(ids)
+            pair = max(stats, key = stats.get)
             idx = 256 + i
             print(f"Merging {pair} into a new token {idx}")
-            ids = self.merge(ids, pair, idx)
+            ids = merge(ids, pair, idx)
 
             merges[pair] = idx
             vocab[idx] = vocab[pair[0]] + vocab[pair[1]]
     
         self.merges = merges
         self.vocab = vocab
-        return ids
+
         
     def encode(self, text):
         """
@@ -91,12 +94,13 @@ class Tokenizer:
         """
         vocab = self.vocab
         tokens = b"".join(vocab[idx] for idx in ids)
-        text = tokens.decode("utf-8", erros = "replace")
+        text = tokens.decode("utf-8", errors = "replace")
         return text
 
 if __name__ == '__main__':
-    # text = 'The Tokenizer is a necessary and pervasive component of Large Language Models (LLMs), where it translates between strings and tokens (text chunks). Tokenizers are a completely separate stage of the LLM pipeline: they have their own training sets, training algorithms (Byte Pair Encoding), and after training implement two fundamental functions: encode() from strings to tokens, and decode() back from tokens to'
-    # tokens = text.encode("utf-8")
+    tokenizer = Tokenizer()
+    text = 'The Tokenizer is a necessary and pervasive component of Large Language Models (LLMs), where it translates between strings and tokens (text chunks). Tokenizers are a completely separate stage of the LLM pipeline: they have their own training sets, training algorithms (Byte Pair Encoding), and after training implement two fundamental functions: encode() from strings to tokens, and decode() back from tokens to'
+    tokenizer.train(text, 280)
     # # print(tokens)
     # tokens = list(map(int, tokens))
     # # print(tokens)
@@ -105,5 +109,9 @@ if __name__ == '__main__':
     # # print(sorted(((v,k) for k,v in stats.items()), reverse=True))
     # top_pair = max(stats, key = stats.get)
     # print(top_pair)
+    print(tokenizer.decode(tokenizer.encode('hello world')))
+    ood_text = text
+    print(tokenizer.decode(tokenizer.encode(ood_text)))
+    print(tokenizer.decode(tokenizer.encode(ood_text)) == ood_text)
 
-    
+    pass
