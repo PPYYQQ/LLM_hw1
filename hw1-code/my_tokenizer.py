@@ -43,6 +43,27 @@ def get_stats(ids):
         counts[pair] = counts.get(pair, 0) + 1
     return counts
 
+def merge(ids, pair, idx):
+    """
+    Params:
+        ids (list): list of the ints(ids).
+        replace pair with token idx
+
+    Return:
+        newids (list): list of the ints(ids) after replacement
+    """
+    newids = []
+    i = 0
+    while i < len(ids):
+        if i < len(ids-1):
+            continue
+        if ids[i] == pair[0] and ids[i+1] == pair[1]:
+            newids.append(idx)
+            i += 2
+        else:
+            newids.append(ids[i])
+    return newids
+    
 
 if __name__ == '__main__':
     text = 'The Tokenizer is a necessary and pervasive component of Large Language Models (LLMs), where it translates between strings and tokens (text chunks). Tokenizers are a completely separate stage of the LLM pipeline: they have their own training sets, training algorithms (Byte Pair Encoding), and after training implement two fundamental functions: encode() from strings to tokens, and decode() back from tokens to'
