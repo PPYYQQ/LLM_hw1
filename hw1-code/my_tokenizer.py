@@ -60,7 +60,6 @@ class Tokenizer:
         self.vocab = vocab
         return ids
         
-
     def encode(self, text):
         """
         Encode the input string into a token list.
@@ -70,10 +69,17 @@ class Tokenizer:
         Return:
             ids (list): list of integer-type tokens.
         """
+        tokens = list(text.encode("utf-8"))
         merges = self.merges
-        
-        pass
-
+        while len(tokens) >= 2:
+            stats = get_stats(tokens)
+            pair = min(stats, key = lambda p: merges.get(p, float("inf")))
+            if pair not in merges:
+                break
+            idx = merges[pair]
+            tokens = merge(tokens, pair, idx)
+        return tokens
+            
     def decode(self, ids):
         """
         Decode a token list into a string.
@@ -89,13 +95,15 @@ class Tokenizer:
         return text
 
 if __name__ == '__main__':
-    text = 'The Tokenizer is a necessary and pervasive component of Large Language Models (LLMs), where it translates between strings and tokens (text chunks). Tokenizers are a completely separate stage of the LLM pipeline: they have their own training sets, training algorithms (Byte Pair Encoding), and after training implement two fundamental functions: encode() from strings to tokens, and decode() back from tokens to'
-    tokens = text.encode("utf-8")
-    # print(tokens)
-    tokens = list(map(int, tokens))
-    # print(tokens)
+    # text = 'The Tokenizer is a necessary and pervasive component of Large Language Models (LLMs), where it translates between strings and tokens (text chunks). Tokenizers are a completely separate stage of the LLM pipeline: they have their own training sets, training algorithms (Byte Pair Encoding), and after training implement two fundamental functions: encode() from strings to tokens, and decode() back from tokens to'
+    # tokens = text.encode("utf-8")
+    # # print(tokens)
+    # tokens = list(map(int, tokens))
+    # # print(tokens)
     
-    stats = get_stats(tokens)
-    # print(sorted(((v,k) for k,v in stats.items()), reverse=True))
-    top_pair = max(stats, key = stats.get)
-    print(top_pair)
+    # stats = get_stats(tokens)
+    # # print(sorted(((v,k) for k,v in stats.items()), reverse=True))
+    # top_pair = max(stats, key = stats.get)
+    # print(top_pair)
+
+    
