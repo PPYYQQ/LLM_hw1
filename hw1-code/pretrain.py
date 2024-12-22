@@ -30,12 +30,12 @@ class CausalSelfAttention(nn.Module):
         v = v.view(B, T, self.n_head, C // self.n_head).transpose(1,2) # (B, number of heads, seq length, head size)
 
         # attention
-        att = (q @ k.transpose(-2. -1)) * (1.0 / math.sqrt(k.size(-1)))
+        att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
         # only attend to the previous
         att = att.masked_fill(self.bias[:, :, :T, :T] == 0, float('-inf'))
         att = F.softmax(att, dim = -1)
         y = att @ v
-        y = y.transpose(1, 2).contiguous.view(B, T, C)
+        y = y.transpose(1, 2).contiguous().view(B, T, C)
         y = self.c_proj(y)
         return y
 
@@ -163,9 +163,8 @@ class GPT(nn.Module):
                 assert sd_hf[k].shape == sd[k].shape
                 with torch.no_grad():
                     sd[k].copy_(sd_hf[k])
-                    
-        return model
 
+        return model
 
 
 model = GPT.from_pretrained('gpt2')
@@ -182,10 +181,10 @@ model.eval()
 model.to('cuda')
 
 import tiktoken
-enc = tiktoken.get_encoding()
+enc = tiktoken.get_encoding('gpt2')
 tokens = enc.encode("Hello, I am a language model,")
 tokens = torch.tensor(tokens, dtype=torch.long)
-tokens = tokens.unsqueeze(0).repeat(num_return_seq)
+tokens = tokens.unsqueeze(0).repeat(num_return_seq, 1)
 x = tokens.to('cuda')
 
 torch.manual_seed(42)
@@ -211,8 +210,4 @@ for i in range(num_return_seq):
     decoded = enc.decode(tokens)
     print(decoded)
 
-import os
-os.environ['CURL_CA_BUNDLE'] = ""
-import requests
-response = requests.get('https://huggingface.co/gpt2/resolve/main/config.json', verify=False)
 
