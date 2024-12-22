@@ -13,6 +13,7 @@ class CausalSelfAttention(nn.Module):
         self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd)
         # Output projection
         self.c_proj = nn.Linear(config.n_embd, config.n_embd)
+        self.c_proj.PYQ = 1
         # Regularization
         self.n_head = config.n_head
         self.n_embd = config.n_embd
@@ -46,6 +47,7 @@ class MLP(nn.Module):
         self.c_fc = nn.Linear(config.n_embd, 4 * config.n_embd)
         self.gelu = nn.GELU(approximate='tanh')
         self.c_proj = nn.Linear(4 * config.n_embd, config.n_embd)
+        self.c_proj.PYQ = 1
 
     def forward(self, x):
         x = self.c_fc(x)
@@ -105,6 +107,9 @@ class GPT(nn.Module):
 
     def _init_weight(self , module):
         if isinstance(module, nn.Linear):
+            std = 0.02
+            if hasattr(module, 'PYQ'):
+                std *= (2 * self.config.n_layer) ** -0.5
             torch.nn.init.normal_(module.weight, mean =0.0, std = 0.02)
             if module.bias is not None:
                 torch.nn.init.zeros_(module.bias)
@@ -295,6 +300,9 @@ print(f"Using model {device}")
 
 # print(loss)
 
+
+torch.manual_seed(42)
+torch.cuda.manual_seed(42)
 
 model = GPT(GPTConfig())
 model.to(device)
