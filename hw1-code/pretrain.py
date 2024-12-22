@@ -63,8 +63,10 @@ class Block(nn.Module):
         self.mlp = MLP(config)
 
     def forward(self, x):
+        # print(x)
         x = x + self.attn(self.ln_1(x))
         x = x + self.mlp(self.ln_2(x))
+        return x
 
 @dataclass
 class GPTConfig:
