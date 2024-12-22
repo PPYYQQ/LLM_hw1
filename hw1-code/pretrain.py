@@ -78,7 +78,7 @@ class Block(nn.Module):
 @dataclass
 class GPTConfig:
     block_size : int = 1024
-    vocab_size : int = 50304
+    vocab_size : int = 50257
     n_layer : int = 12
     n_head : int = 12
     n_embd : int = 768
@@ -309,7 +309,7 @@ import time
 torch.manual_seed(42)
 torch.cuda.manual_seed(42)
 
-model = GPT(GPTConfig())
+model = GPT(GPTConfig(vocab_size=50304))
 model.to(device)
 model = torch.compile(model)
 
