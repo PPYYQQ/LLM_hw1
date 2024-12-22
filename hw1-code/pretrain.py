@@ -97,7 +97,7 @@ class GPT(nn.Module):
         # Final classifier
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias = False)
         
-    def forward(self, idx):
+    def forward(self, idx, targets=None):
         B, T = idx.size()
         pos = torch.arange(0, T, dtype = torch.long, device = idx.device)
         pos_emb = self.transformer.wpe(pos)
@@ -110,10 +110,12 @@ class GPT(nn.Module):
         x = self.transformer.ln_f(x)
         logits = self.lm_head(x)
 
-        return logits
+        loss = None
+        if targets is not None:
+            loss = F.cross_entropy(logits.view(-1, logits.size(-1)), targets.view(-1))
 
+        return logits, loss
 
-    
 
     @classmethod
     def from_pretrained(cls, model_type, override_args=None):
@@ -236,6 +238,6 @@ y = buffer[1:].view(B, T)
 
 model = GPT(GPTConfig())
 model.to(device)
-logits = model(x)
+logits, loss = model(x, y)
 
-print(logits.shape)
+print(loss)
