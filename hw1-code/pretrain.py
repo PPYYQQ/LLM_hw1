@@ -163,10 +163,17 @@ class GPT(nn.Module):
                 assert sd_hf[k].shape == sd[k].shape
                 with torch.no_grad():
                     sd[k].copy_(sd_hf[k])
+                    
+        return model
 
 
 
 model = GPT.from_pretrained('gpt2')
+print()
+if model is None:
+    print("Model loading failed.")
+else:
+    print("Model loaded successfully.")
 print('did not crash')
 
 num_return_seq = 5
@@ -203,3 +210,9 @@ for i in range(num_return_seq):
     tokens = x[i, :max_length].tolist()
     decoded = enc.decode(tokens)
     print(decoded)
+
+import os
+os.environ['CURL_CA_BUNDLE'] = ""
+import requests
+response = requests.get('https://huggingface.co/gpt2/resolve/main/config.json', verify=False)
+
