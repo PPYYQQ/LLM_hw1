@@ -4,6 +4,41 @@ import torch
 import torch.nn as nn
 from torch.nn import functional as F
 
+class CausalSelfAttention(nn.Moudule):
+
+    def __init__(self, config):
+        super().__init__()
+        
+        # Key Query Value prjections in a batch
+        self.c_attn = nn.Linear(config.n_embd, 3 * config.n_embd)
+        # Output projection
+        self.c_proj = nn.Linear(config.n_embd, config.n_embd)
+        # Regularization
+        self.n_head = config.n_head
+        self.n_embd = config.n_embd
+        # Mask
+        self.register_buffer("bias", torch.tril(torch.ones(config.block_size, config.block_size)).view(1,1, config.block_size, config.block_size))
+
+    def forward(self, x):
+        # Batch size, Seq length, dimension
+        B, T, C = x.size()
+
+        qkv = self.c_attn(x)
+        q, k , v = qkv.split(self.n_embd, dim = 2)
+        k = k.view(B, T, self.n_head, C // self.n_head).transpose(1,2) # (B, number of heads, seq length, head size)
+        q = q.view(B, T, self.n_head, C // self.n_head).transpose(1,2) # (B, number of heads, seq length, head size)
+        v = v.view(B, T, self.n_head, C // self.n_head).transpose(1,2) # (B, number of heads, seq length, head size)
+
+        # attention
+        att = (q @ k.transpose(-2. -1)) * (1.0 / math.sqrt(k.size(-1)))
+        # only attend to the previous
+        att = att.masked_fill(self.bias[:, :, :T, :T] == 0, float('-inf'))
+        att = F.softmax(att, dim = -1)
+        y = att @ v
+        y = y.transpose(1, 2).contiguous.view(B, T, C)
+        y = self.c_proj(y)
+        return y
+
 class MLP(nn.Module):
     
     def __init__(self, config):
