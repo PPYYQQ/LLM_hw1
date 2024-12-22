@@ -99,6 +99,17 @@ class GPT(nn.Module):
 
         # weight sharing
         self.transformer.wte.weight = self.lm_head.weight
+
+        # init weight
+        self.apply(self._init_weight)
+
+    def _init_weight(self , module):
+        if isinstance(module, nn.Linear):
+            torch.nn.init.normal_(module.weight, mean =0.0, std = 0.02)
+            if module.bias is not None:
+                torch.nn.init.zeros_(module.bias)
+        elif isinstance(module, nn.Embedding):
+            torch.nn.init.normal_(module.weight, mean = 0.0, std = 0.02)
         
     def forward(self, idx, targets=None):
         B, T = idx.size()
@@ -293,7 +304,7 @@ optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4)
 
 train_loader = DataLoaderLite(B = 4, T = 32)
 
-for i in range(50):
+for i in range(100):
     x, y = train_loader.next_batch()
     x, y = x.to(device), y.to(device)
     optimizer.zero_grad()
