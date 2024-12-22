@@ -169,49 +169,73 @@ class GPT(nn.Module):
         return model
 
 
-# model = GPT.from_pretrained('gpt2')
-model = GPT(GPTConfig())
-print()
-if model is None:
-    print("Model loading failed.")
-else:
-    print("Model loaded successfully.")
-print('did not crash')
+device = 'cpu'
+if torch.cuda.is_available():
+    device = 'cuda'
+print(f"Using model {device}")
 
-num_return_seq = 5
-max_length = 30
-model.eval()
-model.to('cuda')
+# Testing for from pretrained
+# # model = GPT.from_pretrained('gpt2')
+# model = GPT(GPTConfig())
+# print()
+# if model is None:
+#     print("Model loading failed.")
+# else:
+#     print("Model loaded successfully.")
+# print('did not crash')
+
+# num_return_seq = 5
+# max_length = 30
+# model.eval()
+# model.to(device)
+
+# import tiktoken
+# enc = tiktoken.get_encoding('gpt2')
+# tokens = enc.encode("Hello, I am a language model,")
+# tokens = torch.tensor(tokens, dtype=torch.long)
+# tokens = tokens.unsqueeze(0).repeat(num_return_seq, 1)
+# x = tokens.to(device)
+
+# torch.manual_seed(42)
+# torch.cuda.manual_seed(42)
+# while x.size(1) < max_length:
+
+#     with torch.no_grad():
+#         logits = model(x)
+
+#         # only care last col logits
+#         logits = logits[:, -1, :]
+
+#         # topk 50
+#         probs = F.softmax(logits, dim = -1)
+#         topk_probs , topk_indices = torch.topk(probs, 50, dim = -1)
+
+#         # (B, 1) select tokens and coresponding idx
+#         ix = torch.multinomial(topk_probs, 1)
+#         xcol = torch.gather(topk_indices, -1, ix)
+#         x = torch.cat((x, xcol), dim= -1)
+
+# for i in range(num_return_seq):
+#     tokens = x[i, :max_length].tolist()
+#     decoded = enc.decode(tokens)
+#     print(decoded)
+
+
 
 import tiktoken
 enc = tiktoken.get_encoding('gpt2')
-tokens = enc.encode("Hello, I am a language model,")
-tokens = torch.tensor(tokens, dtype=torch.long)
-tokens = tokens.unsqueeze(0).repeat(num_return_seq, 1)
-x = tokens.to('cuda')
+with open('input.txt', 'r') as f:
+    text = f.read()
+f.close()
+text = text[:1000]
+tokens = enc.encode(text)
+B, T = 4, 32
+buffer = torch.tensor(tokens[:B*T + 1]).to(device)
+x = buffer[:-1].view(B, T)
+y = buffer[1:].view(B, T)
 
-torch.manual_seed(42)
-torch.cuda.manual_seed(42)
-while x.size(1) < max_length:
+model = GPT(GPTConfig())
+model.to(device)
+logits = model(x)
 
-    with torch.no_grad():
-        logits = model(x)
-
-        # only care last col logits
-        logits = logits[:, -1, :]
-
-        # topk 50
-        probs = F.softmax(logits, dim = -1)
-        topk_probs , topk_indices = torch.topk(probs, 50, dim = -1)
-
-        # (B, 1) select tokens and coresponding idx
-        ix = torch.multinomial(topk_probs, 1)
-        xcol = torch.gather(topk_indices, -1, ix)
-        x = torch.cat((x, xcol), dim= -1)
-
-for i in range(num_return_seq):
-    tokens = x[i, :max_length].tolist()
-    decoded = enc.decode(tokens)
-    print(decoded)
-
-
+print(logits.shape)
