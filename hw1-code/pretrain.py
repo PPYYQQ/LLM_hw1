@@ -282,3 +282,19 @@ print(f"Using model {device}")
 # print(loss)
 
 
+model = GPT(GPTConfig())
+model.to(device)
+
+# Optimization
+optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4)
+
+train_loader = DataLoaderLite(B = 4, T = 32)
+
+for i in range(50):
+    x, y = train_loader.next_batch()
+    x, y = x.to(device), y.to(device)
+    optimizer.zero_grad()
+    logits, loss = model(x, y)
+    loss.backward()
+    optimizer.step()
+    print(f"Step {i}, loss: {loss.item()}")
