@@ -169,7 +169,8 @@ class GPT(nn.Module):
         return model
 
 
-model = GPT.from_pretrained('gpt2')
+# model = GPT.from_pretrained('gpt2')
+model = GPT(GPTConfig())
 print()
 if model is None:
     print("Model loading failed.")
