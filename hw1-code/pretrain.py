@@ -95,6 +95,23 @@ class GPT(nn.Module):
         # Final classifier
         self.lm_head = nn.Linear(config.n_embd, config.vocab_size, bias = False)
         
+    def forward(self, idx):
+        B, T = idx.size()
+        pos = torch.arange(0, T, dtype = torch.long, device = idx.device)
+        pos_emb = self.transformer.wpe(pos)
+        tok_emb = self.transformer.wte(idx)
+        x = tok_emb + pos_emb
+
+        for block in self.transformer.h:
+            x = block(x)
+        
+        x = self.transformer.ln_f(x)
+        logits = self.lm_head(x)
+
+        return logits
+
+
+    
 
     @classmethod
     def from_pretrained(cls, model_type, override_args=None):
@@ -151,3 +168,15 @@ class GPT(nn.Module):
 
 model = GPT.from_pretrained('gpt2')
 print('did not crash')
+
+num_return_seq = 5
+model.eval()
+model.to('cuda')
+
+import tiktoken
+enc = tiktoken.get_encoding()
+tokens = enc.encode("Hello, I am a language model,")
+tokens = torch.tensor(tokens, dtype=torch.long)
+tokens = tokens.unsqueeze(0).repeat(num_return_seq)
+x = tokens.to('cuda')
+
