@@ -299,7 +299,7 @@ print(f"Using model {device}")
 
 
 # print(loss)
-
+import time
 
 torch.manual_seed(42)
 torch.cuda.manual_seed(42)
@@ -310,13 +310,19 @@ model.to(device)
 # Optimization
 optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4)
 
-train_loader = DataLoaderLite(B = 4, T = 32)
+train_loader = DataLoaderLite(B = 8, T = 1024)
+torch.set_float32_matmul_precision('high')
 
 for i in range(100):
+    t0 = time.time()
     x, y = train_loader.next_batch()
     x, y = x.to(device), y.to(device)
     optimizer.zero_grad()
     logits, loss = model(x, y)
     loss.backward()
     optimizer.step()
-    print(f"Step {i}, loss: {loss.item()}")
+    torch.cuda.synchronize()
+    t1 = time.time()
+    dt = (t1-t0) * 1000
+    tokens_per_sec = (train_loader.B * train_loader.T) / (t1-t0)
+    print(f"Step {i}, loss: {loss.item()}, dt: {dt:2f}ms toks/sec: {tokens_per_sec}")
