@@ -193,19 +193,20 @@ torch.manual_seed(42)
 torch.cuda.manual_seed(42)
 while x.size(1) < max_length:
 
-    logits = model(x)
+    with torch.no_grad():
+        logits = model(x)
 
-    # only care last col logits
-    logits = logits[:, -1, :]
+        # only care last col logits
+        logits = logits[:, -1, :]
 
-    # topk 50
-    probs = F.softmax(logits, dim = -1)
-    topk_probs , topk_indices = torch.topk(probs, 50, dim = -1)
+        # topk 50
+        probs = F.softmax(logits, dim = -1)
+        topk_probs , topk_indices = torch.topk(probs, 50, dim = -1)
 
-    # (B, 1) select tokens and coresponding idx
-    ix = torch.multinomial(topk_probs, 1)
-    xcol = torch.gather(topk_indices, -1, ix)
-    x = torch.cat((x, xcol), dim= -1)
+        # (B, 1) select tokens and coresponding idx
+        ix = torch.multinomial(topk_probs, 1)
+        xcol = torch.gather(topk_indices, -1, ix)
+        x = torch.cat((x, xcol), dim= -1)
 
 for i in range(num_return_seq):
     tokens = x[i, :max_length].tolist()
