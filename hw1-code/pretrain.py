@@ -314,7 +314,7 @@ model.to(device)
 model = torch.compile(model)
 
 # Optimization
-optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4)
+optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4, beat=(0.9, 0.95), eps = 1e-8)
 
 train_loader = DataLoaderLite(B = 8, T = 1024)
 torch.set_float32_matmul_precision('high')
