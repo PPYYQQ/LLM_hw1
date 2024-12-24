@@ -344,6 +344,7 @@ if master_process:
 
 
 train_loader = DataLoaderLite(B = B, T = T, process_rank = ddp_rank, num_processes = ddp_world_size)
+val_loader = DataLoaderLite(B = B, T = T, process_rank = ddp_rank, num_processes = ddp_world_size)
 torch.set_float32_matmul_precision('high')
 
 model = GPT(GPTConfig(vocab_size=50304))
@@ -371,9 +372,28 @@ def get_lr(it):
 # Optimization
 optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4, betas=(0.9, 0.95), eps = 1e-8, weight_decay=1e-2, fused=True)
 
-
-
 for step in range(max_steps):
+
+
+    if step % 100 == 0:
+        model.eval()
+        val_loader.reset()
+        with torch.no_grad():
+            val_loss_accum = 0.0
+            val_loss_steps = 20
+            for _ in range(val_loss_steps):
+                x, y = val_loader.next_batch()
+                x, y = x.to(device), y.to(device)
+                with torch.autocast(device_type=device, dtype=torch.bfloat16):
+                    logits, loss = model(x, y)
+                    loss = loss / val_loss_steps
+                    val_loss_accum += loss.detach()
+        if ddp:
+            dist.all_reduce(val_loss_accum, op=dist.ReduceOp.AVG)
+        if master_process:
+            print(f"validation loss: {val_loss_accum.item():.4f}")
+
+    model.train()
     t0 = time.time()
     optimizer.zero_grad()
     loss_accum = 0.0
