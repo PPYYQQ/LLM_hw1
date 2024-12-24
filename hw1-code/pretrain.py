@@ -330,7 +330,7 @@ def get_lr(it):
     return min_lr + coeff * (max_lr - min_lr)
 
 # Optimization
-optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4, betas=(0.9, 0.95), eps = 1e-8)
+optimizer = torch.optim.AdamW(model.parameters(), lr = 3e-4, betas=(0.9, 0.95), eps = 1e-8, weight_decay=1e-2, fused=True)
 
 
 train_loader = DataLoaderLite(B = 8, T = 1024)
