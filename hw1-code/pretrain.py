@@ -225,10 +225,28 @@ class DataLoaderLite:
         
         return x, y
 
-device = 'cpu'
-if torch.cuda.is_available():
-    device = 'cuda'
-print(f"Using model {device}")
+import os
+from torch.distributed import init_process_group, destroy_process_group
+
+ddp = int(os.environ.get('RANK', -1)) != -1
+if ddp:
+    assert torch.cuda.is_available()
+    init_process_group(backend='nccl')
+    ddp_rank = int(os.environ['RANK'])
+    ddp_local_rank = int(os.environ['LOCAL_RANK'])
+    ddp_world_size = int(os.environ['WORLD_SIZE'])
+    device = f"cuda:{ddp_local_rank}"
+    torch.cuda.set_device(device)
+    master_process = ddp_rank == 0
+else:
+    ddp_rank = 0
+    ddp_local_rank = 1
+    master_process = True
+
+    device = 'cpu'
+    if torch.cuda.is_available():
+        device = 'cuda'
+    print(f"Using model {device}")
 
 # Testing for from pretrained
 # # model = GPT.from_pretrained('gpt2')
@@ -313,10 +331,11 @@ torch.cuda.manual_seed(42)
 total_batch_size = 524288
 B = 16
 T = 1024
-assert total_batch_size % (B*T)==0
-grad_accum_steps = total_batch_size // (B*T)
-print(total_batch_size)
-print(grad_accum_steps)
+assert total_batch_size % (B*T*ddp_world_size )==0
+grad_accum_steps = total_batch_size // (B * T * ddp_world_size)
+if master_process:
+    print(total_batch_size)
+    print(grad_accum_steps)
 
 
 train_loader = DataLoaderLite(B = B, T = T)
