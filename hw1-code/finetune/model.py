@@ -58,9 +58,13 @@ def get_model_and_tokenizer(model_name_or_path="gpt2", trust_remote_code=False, 
     )
 
     if use_lora:
+        # print('lora')
         model = convert_linear_layer_to_lora(model=model, part_module_name=lora_args["part_module_name"], lora_dim=lora_args["lora_dim"], lora_scaling=lora_args["lora_scaling"])
+        # print(model)
         if lora_args["lora_load_path"] is not None:
             model.load_state_dict(torch.load(lora_args["lora_load_path"], map_location=model.device), strict=False)
         model = only_optimize_lora_parameters(model)
+        
+        # print(model)
 
     return model, tokenizer

@@ -62,6 +62,8 @@ def convert_linear_layer_to_lora(model, part_module_name, lora_dim=0, lora_scali
         else:
             raise ValueError("Unsupported module type")
         recursive_setattr(model, name, tmp)
+    print('i am here')
+    print(model)
     return model
 
 
@@ -72,6 +74,7 @@ def only_optimize_lora_parameters(model):
             param.requires_grad = True
         else:
             param.requires_grad = False
+    return model
     # raise NotImplementedError
     ##############################################################################
 

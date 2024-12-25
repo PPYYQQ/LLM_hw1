@@ -42,6 +42,7 @@ class Trainer:
         if self.args.use_lora:
             lora_args = {"part_module_name": self.args.lora_module_name, "lora_dim": self.args.lora_dim, "lora_scaling": self.args.lora_scaling, "lora_load_path": self.args.lora_load_path}
         self.model, self.tokenizer = get_model_and_tokenizer(self.args.model_name_or_path, self.args.trust_remote_code, self.args.max_length, self.args.use_lora, lora_args)
+        # print(self.model)
         self.model.to(self.device)
         self.optimizer = self.configure_optimizers()
 
