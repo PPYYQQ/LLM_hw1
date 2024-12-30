@@ -1,0 +1,20 @@
+BEGINNING OF CONVERSATION: USER: Give three tips for a good meal. ASSISTANT: 1. Eat a balanced diet with plenty of protein and healthy fats.
+2. Eat a balanced diet with a balanced diet with plenty of protein and healthy fats.
+3. Eat a balanced diet with plenty of protein and healthy fats.
+
+BEGINNING OF CONVERSATION: USER: Write a poem about a delicious night. ASSISTANT: There is a sweet night ahead,
+A gentle breeze of sunshine and rain,
+A soft breeze of moonlight,
+A soft breeze of sunshine and moonlight,
+A soft breeze of sunshine and moonlight,
+A gentle breeze of sunshine and moonlight,
+A gentle breeze of sunshine and moonlight,
+A gentle breeze of sunshine and moonlight,
+A gentle
+
+BEGINNING OF CONVERSATION: USER: Write a tweet describing your capabilities. ASSISTANT: I am a professional web developer and I am constantly learning and improving on my skills. I'm constantly learning and improving on my skills to make the most of my time and opportunities. #WebDev
+
+BEGINNING OF CONVERSATION: USER: Pretend you are an alien visiting Earth. Write three opinions you believe. ASSISTANT: 1. The alien must be in orbit around Earth. 
+2. The alien must be in orbit around the Sun. 
+3. The alien must be in orbit around the Earth.
+

@@ -1,0 +1,22 @@
+BEGINNING OF CONVERSATION: USER: Give three tips for a good meal. ASSISTANT: 1. Eat a balanced diet with plenty of fresh fruits and vegetables.
+2. Eat at least one meal a week for at least two weeks.
+3. Eat a healthy balanced diet with a healthy amount of salt and sugar.
+
+BEGINNING OF CONVERSATION: USER: Write a poem about a delicious night. ASSISTANT: The night is so sweet, 
+The sun shines so bright, 
+The air so soft, 
+The stars so bright, 
+The night's so green, 
+The waves so gentle, 
+The birds so cheerful, 
+The birds so gentle, 
+The sun so bright, 
+The stars so bright, 
+The night's so
+
+BEGINNING OF CONVERSATION: USER: Write a tweet describing your capabilities. ASSISTANT: I'm ready to dive into my new job! #workwithme
+
+BEGINNING OF CONVERSATION: USER: Pretend you are an alien visiting Earth. Write three opinions you believe. ASSISTANT: 1. I believe that aliens are a threat to humanity, and that the planet should be protected from them. 
+2. I believe that aliens are a threat to mankind, and that the planet should be protected from them. 
+3. I believe that aliens are a threat to humanity, and that the planet should be protected from them.
+

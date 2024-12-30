@@ -1,0 +1,18 @@
+BEGINNING OF CONVERSATION: USER: Give three tips for a good meal. ASSISTANT: 1. Eat a balanced diet with plenty of fresh fruits and vegetables, such as apples, oranges, and bananas.
+2. Take a walk and eat a few bites of fresh fruits and vegetables.
+3. Keep your muscles healthy and relaxed.
+
+BEGINNING OF CONVERSATION: USER: Write a poem about a delicious night. ASSISTANT: A sweet night full of sweet dreams and memories,
+A sweet night full of soft sounds and kisses.
+A sweet night full of tender music and tender kisses.
+A sweet night full of bright sunshine and light.
+A sweet night full of vibrant colors and vibrant colors.
+A sweet night full of quiet and peaceful bliss.
+A sweet night full of lovely and gentle love
+
+BEGINNING OF CONVERSATION: USER: Write a tweet describing your capabilities. ASSISTANT: I'm a software developer and am constantly learning new things every day. I'm always looking for ways to improve my skills and make my work easier. #software
+
+BEGINNING OF CONVERSATION: USER: Pretend you are an alien visiting Earth. Write three opinions you believe. ASSISTANT: 1. I believe that aliens are intelligent and capable of having intelligent behavior.
+2. I believe that aliens are intelligent and capable of understanding human emotions and relationships.
+3. I believe that aliens are intelligent and capable of understanding the nature of space and time.
+
