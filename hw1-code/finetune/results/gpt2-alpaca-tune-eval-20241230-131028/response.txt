@@ -1,0 +1,24 @@
+BEGINNING OF CONVERSATION: USER: Give three tips for a good meal. ASSISTANT: 1. Eat a balanced diet with plenty of fresh and healthy foods.
+2. Make sure to include plenty of whole grains, lean proteins, and healthy fats in your meals.
+3. Make sure to include plenty of fruits and vegetables in your meals.
+
+BEGINNING OF CONVERSATION: USER: Write a poem about a delicious night. ASSISTANT: The night sky is full of stars,
+The soft sound of their twinkling,
+The sweet taste of aria,
+A perfect blanket of dew,
+A perfect meal,
+Where all is peaceful and serene.
+
+The stars shine brightly,
+A perfect sight,
+A perfect meal,
+Where all is peaceful and serene.
+
+The
+
+BEGINNING OF CONVERSATION: USER: Write a tweet describing your capabilities. ASSISTANT: My capabilities include: working on projects, attending conferences, creating art, writing blog posts, and more! # workedforinthecompany  #organized
+
+BEGINNING OF CONVERSATION: USER: Pretend you are an alien visiting Earth. Write three opinions you believe. ASSISTANT: 1. I believe that Earth is home to a species of intelligent life forms. 
+2. I believe that we have many unique cultures and customs that make us unique. 
+3. I believe that the beauty of Earth is a gift from the universe.
+

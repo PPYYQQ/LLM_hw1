@@ -1,0 +1,13 @@
+{
+    "model_name_or_path": "/home/pku0008/homework_1/LLM_hw1/hw1-code/finetune/results/gpt2-alpaca-20241224-170933",
+    "max_length": 512,
+    "trust_remote_code": true,
+    "use_lora": false,
+    "lora_dim": 32,
+    "lora_scaling": 32,
+    "lora_module_name": "h.",
+    "lora_load_path": "/home/pku0008/homework_1/LLM_hw1/hw1-code/finetune/results/gpt2-alpaca-lora-rank-32-20241225-044441/lora.pt",
+    "seed": 42,
+    "use_cuda": true,
+    "output_dir_name": "gpt2-alpaca-tune-eval"
+}
